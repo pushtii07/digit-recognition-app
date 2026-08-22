@@ -4,7 +4,7 @@ An interactive Streamlit application that allows users to draw a handwritten dig
 
 ## 🚀 Live Demo
 
-Coming soon...
+https://digit-recognition-app-jskheypcbqbhap3b58zznf.streamlit.app/
 
 ## 📌 Project Overview
 
