@@ -299,6 +299,17 @@ with m3:
     )
 
 
+# =========================================================
+# DIGIT COLLECTION PROGRESS
+# =========================================================
+
+progress = (st.session_state.current_digit + 1) / 10
+
+st.progress(
+    progress,
+    text=f"Collecting digit {st.session_state.current_digit} of 9"
+)
+
 st.markdown("<br>", unsafe_allow_html=True)
 
 
@@ -725,12 +736,48 @@ with right_column:
 
 
                 # ---------------------------------------------
+                # CREATE UNIQUE SAMPLE ID
+                # ---------------------------------------------
+
+                if os.path.exists(DATASET_FILE):
+
+                    existing_dataset = pd.read_csv(
+                        DATASET_FILE
+                    )
+
+                    if (
+                        "sample_id" in existing_dataset.columns
+                        and not existing_dataset.empty
+                    ):
+
+                        sample_id = int(
+                            existing_dataset["sample_id"].max()
+                        ) + 1
+
+                    else:
+
+                        sample_id = len(
+                            existing_dataset
+                        ) + 1
+
+                else:
+
+                    sample_id = 1
+
+
+                # ---------------------------------------------
                 # CREATE DATASET ROW
                 # ---------------------------------------------
 
                 row = {
+                    "sample_id": sample_id,
                     "label": digit
                 }
+
+
+                # ---------------------------------------------
+                # ADD 784 PIXEL FEATURES
+                # ---------------------------------------------
 
                 for index, pixel in enumerate(
                     flattened_pixels
@@ -767,11 +814,19 @@ with right_column:
                     updated_dataset = new_row
 
 
+                # ---------------------------------------------
+                # SAVE DATASET
+                # ---------------------------------------------
+
                 updated_dataset.to_csv(
                     DATASET_FILE,
                     index=False
                 )
 
+
+                # ---------------------------------------------
+                # SUCCESS MESSAGE
+                # ---------------------------------------------
 
                 st.success(
                     f"Digit {digit} saved successfully!"
@@ -851,11 +906,13 @@ if os.path.exists(DATASET_FILE):
         f"**{len(dataset)} samples collected**"
     )
 
-    st.dataframe(
-        dataset.head(10),
+    st.dataframe(dataset,
+        
         use_container_width=True
     )
-
+    st.write(dataset["label"].value_counts().sort_index())
+    st.write("Number of columns:", len(dataset.columns))
+    
 else:
 
     st.info(
