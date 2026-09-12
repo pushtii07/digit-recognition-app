@@ -1,6 +1,5 @@
 streamlit
-streamlit-drawable-canvas
-numpy
+streamlit-drawable-canvas==0.9.3numpy
 opencv-python-headless
 matplotlib
 scipy
