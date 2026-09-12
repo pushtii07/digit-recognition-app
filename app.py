@@ -400,6 +400,7 @@ with left_column:
         height=300,
         width=300,
         drawing_mode="freedraw",
+        return_image_data=True,
         key=f"canvas_{st.session_state.canvas_key}"
     )
 
